@@ -1,0 +1,70 @@
+{% macro escapeText(text, dangerouslyDisableAutoEscaping=false) %}
+  {% if dangerouslyDisableAutoEscaping %}
+    {{ text | safe}}
+  {% else %}
+    {{ text }}
+  {% endif %}
+{% endmacro %}
+
+{% macro escapeTitle(title, url, dangerouslyDisableAutoEscaping=false, showTitleAsUrl=false) %}
+  {% if dangerouslyDisableAutoEscaping %}
+    {% if showTitleAsUrl %}
+      <a href="{{ url }}" style="text-decoration:none;color:#ffffff" target="_blank">{{ title | safe }}</a>
+    {% else %}
+      {{ title | safe }}
+    {% endif %}
+  {% else %}
+    {% if showTitleAsUrl %}
+      <a href="{{ url }}" style="text-decoration:none;color:#ffffff" target="_blank">{{ title }}</a>
+    {% else %}
+      {{ title }}
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{% if loaded %}
+    {% if config.showAsList %}
+        <div class="releases-list">
+            {% for item in items %}
+                <div class="release-list">
+                    <span class="release-title bright small light{{ ' no-wrap' if not config.wrapTitle }}">
+                        {{ escapeTitle(item.title, item.url, config.dangerouslyDisableAutoEscaping, config.showTitleAsUrl) }}
+                    </span>
+                    {% if config.showPublishDate %}
+                        <span class="release-date-list light time">
+                            {{ item.publishDate }}
+                        </span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="releases">
+            <div class="release">
+                {% if config.showAlbumArt %}
+                    <div class="release-img"><img src="{{ imgurl }}"></div>
+                {% endif %}
+                <div class="release-title bright medium light{{ ' no-wrap' if not config.wrapTitle }}">
+                    {% if config.showPublishDate %}
+                        <div class="release-date light small dimmed">
+                            {{ publishDate }}:
+                        </div>
+                    {% endif %}
+                    {{ escapeTitle(title, url, config.dangerouslyDisableAutoEscaping, config.showTitleAsUrl) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% elseif empty %}
+    <div class="small dimmed">
+        {{ "NEWSFEED_NO_ITEMS" | translate | safe }}
+    </div>
+{% elseif error %}
+    <div class="small dimmed">
+        {{ "MODULE_CONFIG_ERROR" | translate({MODULE_NAME: "MMM-MusicButler", ERROR: error}) | safe }}
+    </div>
+{% else %}
+    <div class="small dimmed">
+        {{ "LOADING" | translate | safe }}
+    </div>
+{% endif %}

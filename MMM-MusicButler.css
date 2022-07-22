@@ -1,0 +1,27 @@
+.MMM-MusicButler * {
+  box-sizing: border-box;
+}
+
+.releases-list {
+  display: table;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.release-list {
+  display: table-row;
+}
+
+.release-title-list {
+  display: table-cell;
+  text-align: left;
+}
+
+.release-date-list {
+  display: table-cell;
+  text-align: right;
+}
+
+.release-date {
+  display: inline-block;
+}
